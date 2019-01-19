@@ -10,7 +10,6 @@
 	</head>
 	<body>
 		<script src="js/three.js"></script>
-    <script src="js/script.js"></script>
 		<script>
       var scene = new THREE.Scene();
       var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -27,10 +26,12 @@
       camera.position.z = 5;
       
       function animate() {
-	requestAnimationFrame( animate );
-	renderer.render( scene, camera );
-}
-animate();
+	      requestAnimationFrame( animate );
+        cube.rotation.x += 0.01;
+        cube.rotation.y += 0.01;
+	      renderer.render( scene, camera );
+      }
+      animate();
 		</script>
 
     <!-- include the Glitch button to show what the webpage is about and
