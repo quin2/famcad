@@ -49,12 +49,12 @@
           const texString = "https://quin2pm.s3.us-east-2.amazonaws.com/" + dataMap[i][j] + ".jpg";
           
           var materials = [
-            new THREE.MeshBasicMaterial( {color: 0x000000} ),
-            new THREE.MeshBasicMaterial( {color: 0x000000} ),
-            new THREE.MeshBasicMaterial( {color: 0x000000} ),
-            new THREE.MeshBasicMaterial( {color: 0x000000} ),
-            new THREE.MeshBasicMaterial( {map: loader.load(texString)} ),
-            new THREE.MeshBasicMaterial( {color: 0x00FF00} ),
+            new THREE.MeshBasicMaterial( {color: 0x000000, transparent:true}),
+            new THREE.MeshBasicMaterial( {color: 0x000000, transparent:true} ),
+            new THREE.MeshBasicMaterial( {color: 0x000000, transparent:true} ),
+            new THREE.MeshBasicMaterial( {color: 0x000000, transparent:true} ),
+            new THREE.MeshBasicMaterial( {map: loader.load(texString), transparent:true} ),
+            new THREE.MeshBasicMaterial( {color: 0x00FF00, transparent:true} ),
           ]
           
           var plane = new THREE.Mesh( geometry, materials);
@@ -107,6 +107,8 @@
           var changeScale = new TWEEN.Tween(openTile.object.scale).to({x: 1, y: 1}, 1000).onStart(function(){
             new TWEEN.Tween(openTile.object.position).to({z: 0.1}, 1000).start();
           }).onComplete(function(){
+            //console.log
+            new TWEEN.tween([openTile.object).to({opacity:0.0}, 500).start();
             allowClicks = true;
           })
 
@@ -164,7 +166,7 @@
 
 <!--
 TODO:
-add loading bar. 
+add loading bar (texture gif animation onto 2d plane then make it go away when js is done loading...)
 force mosaic OP images to be power of two (128x128)
 
 in order to add text, we will have to draw to canvas, then apply as mesh surface for each individual.....
