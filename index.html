@@ -31,6 +31,7 @@
       var allowClicks = true;
       
       var openTile = NaN;
+      var oldPos = NaN;
       
       //make covering plane for use later.
       var coverObj = new THREE.PlaneBufferGeometry(dataMap[0].length *tileSize, dataMap.length *tileSize, 32 );
@@ -45,6 +46,8 @@
       var loadingMaterial = new THREE.MeshBasicMaterial( {map: loader.load("https://cdn.glitch.com/64c89c91-2aaf-438f-810f-2362a5130d44%2Fgiphy.gif?v=1599514918332")});
       var loadingPlane = new THREE.Mesh( loadingScreen, loadingMaterial);
       loadingPlane.position.z = 0.3
+      
+      console.log(loadingPlane)
       
       scene.add(loadingPlane);
       renderer.render(scene,camera)
@@ -76,8 +79,10 @@
       scene.remove(loadingPlane);
       
       //center camera
-      camera.position.x = ((height/4) * tileSize);
-      camera.position.y = -((width/4) * tileSize)
+      var centerx = ((height/4) * tileSize);
+      var centery = -((width/4) * tileSize);
+      camera.position.x = centerx;
+      camera.position.y = centery;
       
       //scroll wheel to adj j 
       camera.position.z = 40;
@@ -105,20 +110,13 @@
       
       function onMouseClick( event ) {
         if(!allowClicks){
-          /*
-          //reverse animation here
-          var fadeoutBG = new TWEEN.Tween(coverPlane.material).to({opacity:0.0}, 1000).onComplete(function(){
-            scene.remove(coverPlane)
-          })
-          fadeoutBG.start();
-          */
-          
           //run animations in reverse
+          console.log(oldPos)
           
-
           var flipOver = new TWEEN.Tween(openTile.rotation).to({y: 0}, 1000).onStart(function(){
             new TWEEN.Tween(openTile.scale).to({x: 4, y: 4}, 1000).start();
             new TWEEN.Tween(coverPlane.material).to({opacity:0.0}, 1000).start();
+            new TWEEN.Tween(openTile.position).to({x: oldPos.x, y: oldPos.y}, 1000).start();
           }).start();
           
           var changeScale = new TWEEN.Tween(openTile.scale).to({x: 1, y: 1}, 1000).onStart(function(){
@@ -151,6 +149,9 @@
           scene.add( coverPlane );
           
           openTile = intersects[3].object;
+          oldPos.x = openTile.position.x;
+          oldPos.y = openTile.position.y;
+          console.log(oldPos)
 
           //animate scale change
           var changeScale = new TWEEN.Tween(openTile.scale).to({x: 2,y: 2}, 1000).onStart(function(){
@@ -161,7 +162,8 @@
           //animate flip over
           var flipOver = new TWEEN.Tween(openTile.rotation).to({y: 3.14159}, 1000).onStart(function(){
             new TWEEN.Tween(openTile.scale).to({x: 5, y: 2.5}, 1000).start();
-            new TWEEN.Tween(coverPlane.material).to({opacity:0.5}, 1000).start()
+            new TWEEN.Tween(coverPlane.material).to({opacity:0.5}, 1000).start();
+            new TWEEN.Tween(openTile.position).to({x: centerx, y: centery}, 1000).start();
           })
 
           //start everything
@@ -185,9 +187,10 @@
 </html>
 
 <!--
+get stuff to center actually...
+
+
 TODO:
-add scroll stops
-add loading bar (texture gif animation onto 2d plane then make it go away when js is done loading...)
 force mosaic OP images to be power of two (128x128)
 
 in order to add text, we will have to draw to canvas, then apply as mesh surface for each individual.....
@@ -196,8 +199,6 @@ possibly pre-render and display as back mesh texture, then overlay with the 'rea
 get working for touch...
 
 advanced: change LOD as images are zoomed in? 
-
-ray intersections on borders don't work.../fix off by 1 error...
 
 issue could be with tiles filling in extra space...possibly remove first stage scale
 -->
