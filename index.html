@@ -10,6 +10,7 @@
 	</head>
 	<body>
 		<script src="js/three.js"></script>
+    <script type="text/javascript" src="map.json"></script>
 		<script>
       var scene = new THREE.Scene();
       var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -29,10 +30,12 @@
       
       //tileSize must be set to 2 but everything else is OK
     
-      let width = 10;
-      let height = 10;
+      let width = dataMap.length;
+      let height = dataMap[0].length;
       
-      let tileSize = 2
+      let tileSize = 2;
+      
+      console.log(dataMap.length);
       
       for(var i = 0; i < width; i++){
         for(var j = 0; j < height; j++){
@@ -40,13 +43,13 @@
           var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
           var plane = new THREE.Mesh( geometry, material );
           scene.add( plane );
-          plane.position.set(i, -1 * j, 0);
+          plane.position.set(j, -1 * i, 0);
         }
       }
       
-      camera.position.x = (width * tileSize)/4 //set to middle 
-      camera.position.y = -((height * tileSize)/4)
-      camera.position.z = width;
+      camera.position.y = -((height/2) * tileSize));//set to middle 
+      camera.position.x = ((width/2 * tileSize)/4);
+      camera.position.z = 40;
       
       renderer.render(scene, camera)
       
