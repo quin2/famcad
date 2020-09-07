@@ -22,36 +22,30 @@
       
       var raycaster = new THREE.Raycaster();
       var mouse = new THREE.Vector2();
-      
-      /*
-      var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-      var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-      var cube = new THREE.Mesh( geometry, material );
-      scene.add( cube );
-      */
-      
-      //100x100 to test out...
-      
-      //tileSize must be set to 2 but everything else is OK
     
       let width = dataMap.length;
       let height = dataMap[0].length;
       
       let tileSize = 2;
       
+      var allowClicks = true;
+      
+      //make covering plane for use later.
+      var coverObj = new THREE.PlaneBufferGeometry(dataMap[0].length *tileSize, dataMap.length *tileSize, 32 );
+      var coverPlaneMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, opacity: 0.0, transparent: true} );
+      var coverPlane = new THREE.Mesh( coverObj, coverPlaneMaterial);
+      coverPlane.position.z = 0.2 //get it close to original grid...
+      coverPlane.position.x = (dataMap[0].length/tileSize)
+      coverPlane.position.y = -1 * (dataMap.length / tileSize)
       
       for(var i = 0; i < width; i++){
         for(var j = 0; j < height; j++){
-          //var geometry = new THREE.PlaneBufferGeometry( tileSize, tileSize, 32 );
           var geometry = new THREE.BoxBufferGeometry( tileSize, tileSize, 0.1);
           
-          //find asset here.... need to cache on S3 to get real benefits.
-          //three CDN is kind of crappy 
           //address example is https://quin2pm.s3.us-east-2.amazonaws.com/XXX.jpg
           const loader = new THREE.TextureLoader();
           const texString = "https://quin2pm.s3.us-east-2.amazonaws.com/" + dataMap[i][j] + ".jpg";
           
-        
           var materials = [
             new THREE.MeshBasicMaterial( {color: 0x000000} ),
             new THREE.MeshBasicMaterial( {color: 0x000000} ),
@@ -61,15 +55,13 @@
             new THREE.MeshBasicMaterial( {color: 0x00FF00} ),
           ]
           
-          //var material = new THREE.MeshBasicMaterial( {map: loader.load(texString), side: THREE.FrontSide} );
-          
           var plane = new THREE.Mesh( geometry, materials);
           scene.add( plane );
           plane.position.set(j, -1 * i, 0.1);
         }
       }
       
-      //yeet
+      //center camera
       camera.position.x = ((height/4) * tileSize);
       camera.position.y = -((width/4) * tileSize)
       
@@ -77,19 +69,6 @@
       camera.position.z = 40;
       
       renderer.render(scene, camera)
-      
-      /*
-      function animate() {
-	      requestAnimationFrame( animate );
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
-	      renderer.render( scene, camera );
-      }
-      animate();
-      */
-      
-      //add loading bar...
-      //idea: change LOD as we zoom in?
       
       //listen to scroll wheel
       window.addEventListener("wheel", function(e) {
@@ -101,13 +80,16 @@
         } else {
           camera.position.z--;
         }
-      
-        //renderer.render(scene, camera)
-        // code to increment object.position.z 
+
       }, true);
       
       
       function onMouseClick( event ) {
+        if(!allowClicks){
+          //reverse animation here
+          scene.remove(coverPlane);
+        }
+        
         // update the picking ray with the camera and mouse position
         mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
         mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
@@ -117,50 +99,25 @@
         // calculate objects intersecting the picking ray
         var intersects = raycaster.intersectObjects( scene.children );
         
-        //intersects[ 3 ].object.material.color.set( 0xff0000 );
-        
-        var changeScale = new TWEEN.Tween(intersects[3].object.scale).to({x: 2,y: 2}, 1000).onStart(function(){
-          new TWEEN.Tween(intersects[3].object.position).to({z: 1.0}, 1000).start();
-        }).start();
-        
-        //is there a better const for pi?
-        var flipOver = new TWEEN.Tween(intersects[3].object.rotation).to({y: 3.14159}, 1000).onStart(function(){
-          new TWEEN.Tween(intersects[3].object.scale).to({x: 5, y: 2.5}, 1000).start();
-        })
-        
-        
-        //now do the covering plane!
-        var coverObj = new THREE.PlaneBufferGeometry(dataMap[0].length *tileSize, dataMap.length *tileSize, 32 );
-        var coverPlaneMaterial = new THREE.MeshBasicMaterial( {color: 0x0000FF, opacity: 0.0, transparent: true} );
-        var coverPlane = new THREE.Mesh( coverObj, coverPlaneMaterial);
-        coverPlane.position.z = 0.2 //get it close to original grid...
-        coverPlane.position.x = (dataMap[0].length/tileSize)
-        coverPlane.position.y = -1 * (dataMap.length / tileSize)
-        scene.add( coverPlane );
-        
-        var changeOpacity = new TWEEN.Tween(coverPlane.material).to({opacity:0.5}, 1000)
-        
-        renderer.render(scene, camera);
-        
-        
-        //tweenInflate.chain(tweenDeflate);
-        
-        /*
-        intersects[ 3 ].object.scale.x = 2.0;
-        intersects[ 3 ].object.scale.y = 2.0;
-        
-        
-        intersects[ 3 ].object.position.z = 1.0;
-        */
-        /*
-        for ( var i = 0; i < intersects.length; i++ ) {
+        if (intersects.length > 0 && allowClicks){
+          allowClicks = false;
+          scene.add( coverPlane );
 
-          intersects[ i ].object.material.color.set( 0xff0000 );
+          //animate scale change
+          var changeScale = new TWEEN.Tween(intersects[3].object.scale).to({x: 2,y: 2}, 1000).onStart(function(){
+            new TWEEN.Tween(intersects[3].object.position).to({z: 1.0}, 1000).start();
+          }).start();
 
+          //is there a better const for pi?
+          //animate flip over
+          var flipOver = new TWEEN.Tween(intersects[3].object.rotation).to({y: 3.14159}, 1000).onStart(function(){
+            new TWEEN.Tween(intersects[3].object.scale).to({x: 5, y: 2.5}, 1000).start();
+            new TWEEN.Tween(coverPlane.material).to({opacity:0.5}, 1000).start()
+          })
+
+          //start everything
+          changeScale.chain(flipOver);
         }
-        */
-
-        //renderer.render( scene, camera );
       }
       
       window.addEventListener( 'click', onMouseClick, false );
@@ -180,7 +137,6 @@
 
 <!--
 TODO:
-add drop shadow across entire scene when obj is expanded, and freeze clicks.
 set up 'put back' animation that will reverse trnasformation on click, then delete mesh from scene. 
 add loading bar. 
 force mosaic OP images to be power of two (128x128)
@@ -190,5 +146,12 @@ possibly pre-render and display as back mesh texture, then overlay with the 'rea
 
 get working for touch...
 
-remove dead code
+advanced: change LOD as images are zoomed in? 
+-->
+
+<!--
+state lifecycle:
+click anwhere
+click, freeze clicking action, make it so click = collapse
+on next click, make click anwhere work again...
 -->
