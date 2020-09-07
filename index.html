@@ -58,6 +58,7 @@
           ]
           
           var plane = new THREE.Mesh( geometry, materials);
+          plane.clickable = true;
           scene.add( plane );
           plane.position.set(j, -1 * i, 0.1);
         }
@@ -107,7 +108,8 @@
           var changeScale = new TWEEN.Tween(openTile.scale).to({x: 1, y: 1}, 1000).onStart(function(){
             new TWEEN.Tween(openTile.position).to({z: 0.1}, 1000).start();
           }).onComplete(function(){
-            scene.remove(openTile);
+            openTile.material[4] = new THREE.MeshBasicMaterial( {color: 0x000000, transparent:true});
+            openTile.clickable = false;
             allowClicks = true;
           })
 
@@ -125,7 +127,7 @@
         // calculate objects intersecting the picking ray
         var intersects = raycaster.intersectObjects( scene.children );
         
-        if (typeof intersects[3] !== 'undefined' && allowClicks){
+        if (typeof intersects[3] !== 'undefined' && allowClicks && intersects[3].object.clickable){
           allowClicks = false;
           scene.add( coverPlane );
           
@@ -165,7 +167,6 @@
 
 <!--
 TODO:
-remove tile from scene when you're done!!!!!
 add loading bar (texture gif animation onto 2d plane then make it go away when js is done loading...)
 force mosaic OP images to be power of two (128x128)
 
@@ -176,5 +177,5 @@ get working for touch...
 
 advanced: change LOD as images are zoomed in? 
 
-ray intersections on borders don't work...
+ray intersections on borders don't work.../fix off by 1 error...
 -->
