@@ -49,9 +49,15 @@
           //address example is https://quin2pm.s3.us-east-2.amazonaws.com/XXX.jpg
           const loader = new THREE.TextureLoader();
           const texString = "https://quin2pm.s3.us-east-2.amazonaws.com/" + dataMap[i][j] + ".jpg";
-          var material = new THREE.MeshBasicMaterial( {map: loader.load(texString), side: THREE.DoubleSide} );
           
-          var plane = new THREE.Mesh( geometry, material );
+          var materials = [
+            new THREE.MeshBasicMaterial( {map: loader.load(texString), side: THREE.FrontSide} ),
+            new THREE.MeshBasicMaterial( {color: 0x0000FF, side: THREE.BackSide} ),
+            
+          ]
+          //var material = new THREE.MeshBasicMaterial( {map: loader.load(texString), side: THREE.FrontSide} );
+          
+          var plane = new THREE.Mesh( geometry, materials);
           scene.add( plane );
           plane.position.set(j, -1 * i, 0.1);
         }
@@ -110,6 +116,15 @@
         var changeScale = new TWEEN.Tween(intersects[3].object.scale).to({x: 2,y: 2}, 1000).onStart(function(){
           new TWEEN.Tween(intersects[3].object.position).to({z: 1.0}, 1000).start();
         }).start();
+        
+        //is there a better const for pi?
+        var flipOver = new TWEEN.Tween(intersects[3].object.rotation).to({y: 3.14159}, 1000).onStart(function(){
+          new TWEEN.Tween(intersects[3].object.scale).to({x: 5, y: 2.5}, 1000).start();
+        })
+        
+        changeScale.chain(flipOver);
+        
+        
         //tweenInflate.chain(tweenDeflate);
         
         /*
@@ -150,4 +165,5 @@ TODO:
 scale stuff larger, then flip
 set up 'put back' animation that will reverse trnasformation on click
 add loading bar. 
+force mosaic OP images to be power of two (128x128)
 -->
