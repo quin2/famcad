@@ -43,7 +43,7 @@
       for(var i = 0; i < width; i++){
         for(var j = 0; j < height; j++){
           //var geometry = new THREE.PlaneBufferGeometry( tileSize, tileSize, 32 );
-          var geometry = new THREE.BoxBufferGeometry( tileSize, tileSize, 0.01);
+          var geometry = new THREE.BoxBufferGeometry( tileSize, tileSize, 0.1);
           
           //find asset here.... need to cache on S3 to get real benefits.
           //three CDN is kind of crappy 
@@ -130,6 +130,14 @@
         
         changeScale.chain(flipOver);
         
+        //now do the covering plane!
+        var coverObj = new THREE.PlaneBufferGeometry(dataMap.length, dataMap[0].length * 2, 32 );
+        var coverPlaneMaterial = new THREE.MeshBasicMaterial( {color: 0x000000} );
+        var coverPlane = new THREE.Mesh( coverObj, coverPlaneMaterial);
+        coverPlane.position.z = 5
+        scene.add( coverPlane );
+        renderer.render(scene, camera);
+        
         
         //tweenInflate.chain(tweenDeflate);
         
@@ -177,4 +185,6 @@ in order to add text, we will have to draw to canvas, then apply as mesh surface
 possibly pre-render and display as back mesh texture, then overlay with the 'real element' later? 
 
 get working for touch...
+
+remove dead code
 -->
