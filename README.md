@@ -1,9 +1,8 @@
-Three.js Getting started
+photomosaic
 =================
 
-
-The getting started example for three.js
+it's magic ;0
 
 -------------------
 
-\ ゜o゜)ノ
+(O v O ") <- "look, a bird!"
