@@ -26,21 +26,27 @@
       */
       
       //100x100 to test out...
-      let width = 100;
-      let height = 100;
       
-      for(var i = 0; i < 10; i++){
-        for(var j = 0; j < 10; j++){
-          var geometry = new THREE.PlaneGeometry( 2, 2, 32 );
+      //tileSize must be set to 2 but everything else is OK
+    
+      let width = 10;
+      let height = 10;
+      
+      let tileSize = 2
+      
+      for(var i = 0; i < width; i++){
+        for(var j = 0; j < height; j++){
+          var geometry = new THREE.PlaneGeometry( tileSize, tileSize, 32 );
           var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
           var plane = new THREE.Mesh( geometry, material );
           scene.add( plane );
-          plane.position.set(i, j, 0);
+          plane.position.set(i, -1 * j, 0);
         }
       }
       
-
-      camera.position.z = 5;
+      camera.position.x = (width * tileSize)/4 //set to middle 
+      camera.position.y = -((height * tileSize)/4)
+      camera.position.z = width;
       
       renderer.render(scene, camera)
       
