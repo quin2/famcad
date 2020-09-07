@@ -110,9 +110,8 @@
       
       function onMouseClick( event ) {
         if(!allowClicks){
-          //run animations in reverse
-          console.log(oldPos)
           
+          //run animations in reverse          
           var flipOver = new TWEEN.Tween(openTile.rotation).to({y: 0}, 1000).onStart(function(){
             new TWEEN.Tween(openTile.scale).to({x: 4, y: 4}, 1000).start();
             new TWEEN.Tween(coverPlane.material).to({opacity:0.0}, 1000).start();
@@ -149,9 +148,7 @@
           scene.add( coverPlane );
           
           openTile = intersects[3].object;
-          oldPos.x = openTile.position.x;
-          oldPos.y = openTile.position.y;
-          console.log(oldPos)
+          oldPos = {x: openTile.position.x, y: openTile.position.y};
 
           //animate scale change
           var changeScale = new TWEEN.Tween(openTile.scale).to({x: 2,y: 2}, 1000).onStart(function(){
@@ -161,7 +158,7 @@
           //is there a better const for pi?
           //animate flip over
           var flipOver = new TWEEN.Tween(openTile.rotation).to({y: 3.14159}, 1000).onStart(function(){
-            new TWEEN.Tween(openTile.scale).to({x: 5, y: 2.5}, 1000).start();
+            new TWEEN.Tween(openTile.scale).to({x: 10, y: 8}, 1000).start();
             new TWEEN.Tween(coverPlane.material).to({opacity:0.5}, 1000).start();
             new TWEEN.Tween(openTile.position).to({x: centerx, y: centery}, 1000).start();
           })
@@ -192,6 +189,7 @@ get stuff to center actually...
 
 TODO:
 force mosaic OP images to be power of two (128x128)
+get actual pixel to disappear
 
 in order to add text, we will have to draw to canvas, then apply as mesh surface for each individual.....
 possibly pre-render and display as back mesh texture, then overlay with the 'real element' later? 
@@ -199,6 +197,4 @@ possibly pre-render and display as back mesh texture, then overlay with the 'rea
 get working for touch...
 
 advanced: change LOD as images are zoomed in? 
-
-issue could be with tiles filling in extra space...possibly remove first stage scale
 -->
