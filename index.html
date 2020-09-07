@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>My first three.js app</title>
+		<title>mosaicmosaic</title>
 		<style>
 			body { margin: 0; }
 			canvas { width: 100%; height: 100% }
@@ -38,7 +38,6 @@
       
       let tileSize = 2;
       
-      console.log(dataMap.length);
       
       for(var i = 0; i < width; i++){
         for(var j = 0; j < height; j++){
@@ -105,13 +104,21 @@
         // calculate objects intersecting the picking ray
         var intersects = raycaster.intersectObjects( scene.children );
         
-        console.log(intersects)
-
+        //intersects[ 3 ].object.material.color.set( 0xff0000 );
+        
+        intersects[ 3 ].object.scale.x = 2.0;
+        intersects[ 3 ].object.scale.y = 2.0;
+        
+        
+        intersects[ 3 ].object.position.z = 1.0;
+        
+        /*
         for ( var i = 0; i < intersects.length; i++ ) {
 
           intersects[ i ].object.material.color.set( 0xff0000 );
 
         }
+        */
 
         renderer.render( scene, camera );
       }
