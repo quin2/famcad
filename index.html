@@ -107,12 +107,10 @@
         
         //intersects[ 3 ].object.material.color.set( 0xff0000 );
         
-        var changeScale = new TWEEN.Tween(intersects[3].object.scale).to({
-          x: 2,
-          y: 2,
-        }, 1000)
+        var changeScale = new TWEEN.Tween(intersects[3].object.scale).to({x: 2,y: 2}, 1000).onStart(function(){
+          new TWEEN.Tween(intersects[3].object.position).to({z: 1.0}, 1000).start();
+        }).start();
         //tweenInflate.chain(tweenDeflate);
-        changeScale.start();
         
         /*
         intersects[ 3 ].object.scale.x = 2.0;
@@ -146,3 +144,10 @@
     <script src="https://button.glitch.me/button.js"></script>
   </body>
 </html>
+
+<!--
+TODO:
+scale stuff larger, then flip
+set up 'put back' animation that will reverse trnasformation on click
+add loading bar. 
+-->
