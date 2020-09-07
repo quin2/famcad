@@ -128,14 +128,18 @@
           new TWEEN.Tween(intersects[3].object.scale).to({x: 5, y: 2.5}, 1000).start();
         })
         
-        changeScale.chain(flipOver);
         
         //now do the covering plane!
-        var coverObj = new THREE.PlaneBufferGeometry(dataMap.length, dataMap[0].length * 2, 32 );
-        var coverPlaneMaterial = new THREE.MeshBasicMaterial( {color: 0x000000} );
+        var coverObj = new THREE.PlaneBufferGeometry(dataMap[0].length *tileSize, dataMap.length *tileSize, 32 );
+        var coverPlaneMaterial = new THREE.MeshBasicMaterial( {color: 0x0000FF, opacity: 0.0, transparent: true} );
         var coverPlane = new THREE.Mesh( coverObj, coverPlaneMaterial);
-        coverPlane.position.z = 5
+        coverPlane.position.z = 0.2 //get it close to original grid...
+        coverPlane.position.x = (dataMap[0].length/tileSize)
+        coverPlane.position.y = -1 * (dataMap.length / tileSize)
         scene.add( coverPlane );
+        
+        var changeOpacity = new TWEEN.Tween(coverPlane.material).to({opacity:0.5}, 1000)
+        
         renderer.render(scene, camera);
         
         
