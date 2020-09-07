@@ -97,13 +97,17 @@
           */
           
           //run animations in reverse
-          var changeScale = new TWEEN.Tween(openTile.object.scale).to({x: 2,y: 2}, 1000).onStart(function(){
-            new TWEEN.Tween(openTile.object.position).to({z: 0.1}, 1000).start();
-          }).start();
+          
 
-          var flipOver = new TWEEN.Tween(openTile.object.rotation).to({y: -3.14159}, 1000).onStart(function(){
+          var flipOver = new TWEEN.Tween(openTile.object.rotation).to({y: 0}, 1000).onStart(function(){
             new TWEEN.Tween(openTile.object.scale).to({x: 4, y: 4}, 1000).start();
             new TWEEN.Tween(coverPlane.material).to({opacity:0.0}, 1000).start();
+          }).start();
+          
+          var changeScale = new TWEEN.Tween(openTile.object.scale).to({x: 1, y: 1}, 1000).onStart(function(){
+            new TWEEN.Tween(openTile.object.position).to({z: 0.1}, 1000).start();
+          }).onComplete(function(){
+            allowClicks = true;
           })
 
           //start everything
@@ -120,7 +124,7 @@
         // calculate objects intersecting the picking ray
         var intersects = raycaster.intersectObjects( scene.children );
         
-        if (intersects.length > 0 && allowClicks){
+        if (typeof intersects[3] !== 'undefined' && allowClicks){
           allowClicks = false;
           scene.add( coverPlane );
           
@@ -160,7 +164,6 @@
 
 <!--
 TODO:
-set up 'put back' animation that will reverse trnasformation on click, then delete mesh from scene. 
 add loading bar. 
 force mosaic OP images to be power of two (128x128)
 
@@ -170,11 +173,6 @@ possibly pre-render and display as back mesh texture, then overlay with the 'rea
 get working for touch...
 
 advanced: change LOD as images are zoomed in? 
--->
 
-<!--
-state lifecycle:
-click anwhere
-click, freeze clicking action, make it so click = collapse
-on next click, make click anwhere work again...
+ray intersections on borders don't work...
 -->
