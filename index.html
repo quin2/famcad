@@ -99,16 +99,15 @@
           //run animations in reverse
           
 
-          var flipOver = new TWEEN.Tween(openTile.object.rotation).to({y: 0}, 1000).onStart(function(){
-            new TWEEN.Tween(openTile.object.scale).to({x: 4, y: 4}, 1000).start();
+          var flipOver = new TWEEN.Tween(openTile.rotation).to({y: 0}, 1000).onStart(function(){
+            new TWEEN.Tween(openTile.scale).to({x: 4, y: 4}, 1000).start();
             new TWEEN.Tween(coverPlane.material).to({opacity:0.0}, 1000).start();
           }).start();
           
-          var changeScale = new TWEEN.Tween(openTile.object.scale).to({x: 1, y: 1}, 1000).onStart(function(){
-            new TWEEN.Tween(openTile.object.position).to({z: 0.1}, 1000).start();
+          var changeScale = new TWEEN.Tween(openTile.scale).to({x: 1, y: 1}, 1000).onStart(function(){
+            new TWEEN.Tween(openTile.position).to({z: 0.1}, 1000).start();
           }).onComplete(function(){
-            //console.log
-            new TWEEN.tween([openTile.object).to({opacity:0.0}, 500).start();
+            scene.remove(openTile);
             allowClicks = true;
           })
 
@@ -130,17 +129,17 @@
           allowClicks = false;
           scene.add( coverPlane );
           
-          openTile = intersects[3];
+          openTile = intersects[3].object;
 
           //animate scale change
-          var changeScale = new TWEEN.Tween(openTile.object.scale).to({x: 2,y: 2}, 1000).onStart(function(){
-            new TWEEN.Tween(openTile.object.position).to({z: 1.0}, 1000).start();
+          var changeScale = new TWEEN.Tween(openTile.scale).to({x: 2,y: 2}, 1000).onStart(function(){
+            new TWEEN.Tween(openTile.position).to({z: 1.0}, 1000).start();
           }).start();
 
           //is there a better const for pi?
           //animate flip over
-          var flipOver = new TWEEN.Tween(openTile.object.rotation).to({y: 3.14159}, 1000).onStart(function(){
-            new TWEEN.Tween(openTile.object.scale).to({x: 5, y: 2.5}, 1000).start();
+          var flipOver = new TWEEN.Tween(openTile.rotation).to({y: 3.14159}, 1000).onStart(function(){
+            new TWEEN.Tween(openTile.scale).to({x: 5, y: 2.5}, 1000).start();
             new TWEEN.Tween(coverPlane.material).to({opacity:0.5}, 1000).start()
           })
 
@@ -166,6 +165,7 @@
 
 <!--
 TODO:
+remove tile from scene when you're done!!!!!
 add loading bar (texture gif animation onto 2d plane then make it go away when js is done loading...)
 force mosaic OP images to be power of two (128x128)
 
