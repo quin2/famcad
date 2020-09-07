@@ -25,10 +25,20 @@
       scene.add( cube );
       */
       
-      var geometry = new THREE.PlaneGeometry( 1, 1, 32 );
-      var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
-      var plane = new THREE.Mesh( geometry, material );
-      scene.add( plane );
+      //100x100 to test out...
+      let width = 100;
+      let height = 100;
+      
+      for(var i = 0; i < 10; i++){
+        for(var j = 0; j < 10; j++){
+          var geometry = new THREE.PlaneGeometry( 2, 2, 32 );
+          var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+          var plane = new THREE.Mesh( geometry, material );
+          scene.add( plane );
+          plane.position.set(i, j, 0);
+        }
+      }
+      
 
       camera.position.z = 5;
       
