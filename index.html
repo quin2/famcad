@@ -42,7 +42,8 @@
       
       for(var i = 0; i < width; i++){
         for(var j = 0; j < height; j++){
-          var geometry = new THREE.PlaneGeometry( tileSize, tileSize, 32 );
+          //var geometry = new THREE.PlaneBufferGeometry( tileSize, tileSize, 32 );
+          var geometry = new THREE.BoxBufferGeometry( tileSize, tileSize, 0.01);
           
           //find asset here.... need to cache on S3 to get real benefits.
           //three CDN is kind of crappy 
@@ -50,11 +51,16 @@
           const loader = new THREE.TextureLoader();
           const texString = "https://quin2pm.s3.us-east-2.amazonaws.com/" + dataMap[i][j] + ".jpg";
           
+        
           var materials = [
-            new THREE.MeshBasicMaterial( {map: loader.load(texString), side: THREE.FrontSide} ),
-            new THREE.MeshBasicMaterial( {color: 0x0000FF, side: THREE.BackSide} ),
-            
+            new THREE.MeshBasicMaterial( {map: loader.load(texString)} ),
+            new THREE.MeshBasicMaterial( {color: 0x0000FF} ),
+            new THREE.MeshBasicMaterial( {color: 0x0000FF} ),
+            new THREE.MeshBasicMaterial( {color: 0x0000FF} ),
+            new THREE.MeshBasicMaterial( {color: 0x0000FF} ),
+            new THREE.MeshBasicMaterial( {color: 0x0000FF} ),
           ]
+          
           //var material = new THREE.MeshBasicMaterial( {map: loader.load(texString), side: THREE.FrontSide} );
           
           var plane = new THREE.Mesh( geometry, materials);
