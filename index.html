@@ -53,12 +53,12 @@
           
         
           var materials = [
+            new THREE.MeshBasicMaterial( {color: 0x000000} ),
+            new THREE.MeshBasicMaterial( {color: 0x000000} ),
+            new THREE.MeshBasicMaterial( {color: 0x000000} ),
+            new THREE.MeshBasicMaterial( {color: 0x000000} ),
             new THREE.MeshBasicMaterial( {map: loader.load(texString)} ),
-            new THREE.MeshBasicMaterial( {color: 0x0000FF} ),
-            new THREE.MeshBasicMaterial( {color: 0x0000FF} ),
-            new THREE.MeshBasicMaterial( {color: 0x0000FF} ),
-            new THREE.MeshBasicMaterial( {color: 0x0000FF} ),
-            new THREE.MeshBasicMaterial( {color: 0x0000FF} ),
+            new THREE.MeshBasicMaterial( {color: 0x00FF00} ),
           ]
           
           //var material = new THREE.MeshBasicMaterial( {map: loader.load(texString), side: THREE.FrontSide} );
@@ -168,8 +168,12 @@
 
 <!--
 TODO:
-scale stuff larger, then flip
-set up 'put back' animation that will reverse trnasformation on click
+add drop shadow across entire scene when obj is expanded, and freeze clicks.
+set up 'put back' animation that will reverse trnasformation on click, then delete mesh from scene. 
 add loading bar. 
 force mosaic OP images to be power of two (128x128)
+
+in order to add text, we will have to draw to canvas, then apply as mesh surface for each individual.....
+possibly pre-render and display as back mesh texture, then overlay with the 'real element' later? 
+
 -->
