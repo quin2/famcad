@@ -30,6 +30,8 @@
       
       var allowClicks = true;
       
+      var openTile = NaN;
+      
       //make covering plane for use later.
       var coverObj = new THREE.PlaneBufferGeometry(dataMap[0].length *tileSize, dataMap.length *tileSize, 32 );
       var coverPlaneMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, opacity: 0.0, transparent: true} );
@@ -86,8 +88,27 @@
       
       function onMouseClick( event ) {
         if(!allowClicks){
+          /*
           //reverse animation here
-          scene.remove(coverPlane);
+          var fadeoutBG = new TWEEN.Tween(coverPlane.material).to({opacity:0.0}, 1000).onComplete(function(){
+            scene.remove(coverPlane)
+          })
+          fadeoutBG.start();
+          */
+          
+          //run animations in reverse
+          var changeScale = new TWEEN.Tween(openTile.object.scale).to({x: 2,y: 2}, 1000).onStart(function(){
+            new TWEEN.Tween(openTile.object.position).to({z: 0.1}, 1000).start();
+          }).start();
+
+          var flipOver = new TWEEN.Tween(openTile.object.rotation).to({y: -3.14159}, 1000).onStart(function(){
+            new TWEEN.Tween(openTile.object.scale).to({x: 4, y: 4}, 1000).start();
+            new TWEEN.Tween(coverPlane.material).to({opacity:0.0}, 1000).start();
+          })
+
+          //start everything
+          flipOver.chain(changeScale);
+
         }
         
         // update the picking ray with the camera and mouse position
@@ -102,16 +123,18 @@
         if (intersects.length > 0 && allowClicks){
           allowClicks = false;
           scene.add( coverPlane );
+          
+          openTile = intersects[3];
 
           //animate scale change
-          var changeScale = new TWEEN.Tween(intersects[3].object.scale).to({x: 2,y: 2}, 1000).onStart(function(){
-            new TWEEN.Tween(intersects[3].object.position).to({z: 1.0}, 1000).start();
+          var changeScale = new TWEEN.Tween(openTile.object.scale).to({x: 2,y: 2}, 1000).onStart(function(){
+            new TWEEN.Tween(openTile.object.position).to({z: 1.0}, 1000).start();
           }).start();
 
           //is there a better const for pi?
           //animate flip over
-          var flipOver = new TWEEN.Tween(intersects[3].object.rotation).to({y: 3.14159}, 1000).onStart(function(){
-            new TWEEN.Tween(intersects[3].object.scale).to({x: 5, y: 2.5}, 1000).start();
+          var flipOver = new TWEEN.Tween(openTile.object.rotation).to({y: 3.14159}, 1000).onStart(function(){
+            new TWEEN.Tween(openTile.object.scale).to({x: 5, y: 2.5}, 1000).start();
             new TWEEN.Tween(coverPlane.material).to({opacity:0.5}, 1000).start()
           })
 
