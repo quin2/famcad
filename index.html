@@ -76,6 +76,7 @@
       animate();
       */
       
+      //add loading bar...
       //idea: change LOD as we zoom in?
       
       //listen to scroll wheel
@@ -93,14 +94,18 @@
         // code to increment object.position.z 
       }, true);
       
-      //renders raycast updates
-      function render() {
-        console.log('woah')
+      
+      function onMouseClick( event ) {
         // update the picking ray with the camera and mouse position
+        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        
         raycaster.setFromCamera( mouse, camera );
 
         // calculate objects intersecting the picking ray
         var intersects = raycaster.intersectObjects( scene.children );
+        
+        console.log(intersects)
 
         for ( var i = 0; i < intersects.length; i++ ) {
 
@@ -111,19 +116,7 @@
         renderer.render( scene, camera );
       }
       
-      //listen to mouse movement
-      function onMouseMove( event ) {
-
-        // calculate mouse position in normalized device coordinates
-        // (-1 to +1) for both components
-
-        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-      }
-      
-      window.addEventListener( 'mousemove', onMouseMove, false );
-      window.requestAnimationFrame(render);
+      window.addEventListener( 'click', onMouseClick, false );
 		</script>
 
     <!-- include the Glitch button to show what the webpage is about and
