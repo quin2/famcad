@@ -40,6 +40,15 @@
       coverPlane.position.x = (dataMap[0].length/tileSize)
       coverPlane.position.y = -1 * (dataMap.length / tileSize)
       
+      const loader = new THREE.TextureLoader();
+      var loadingScreen = new THREE.PlaneBufferGeometry(5, 5, 32 );
+      var loadingMaterial = new THREE.MeshBasicMaterial( {map: loader.load("https://cdn.glitch.com/64c89c91-2aaf-438f-810f-2362a5130d44%2Fgiphy.gif?v=1599514918332")});
+      var loadingPlane = new THREE.Mesh( loadingScreen, loadingMaterial);
+      loadingPlane.position.z = 0.3
+      
+      scene.add(loadingPlane);
+      renderer.render(scene,camera)
+      
       for(var i = 0; i < width; i++){
         for(var j = 0; j < height; j++){
           var geometry = new THREE.BoxBufferGeometry( tileSize, tileSize, 0.1);
@@ -64,6 +73,8 @@
         }
       }
       
+      scene.remove(loadingPlane);
+      
       //center camera
       camera.position.x = ((height/4) * tileSize);
       camera.position.y = -((width/4) * tileSize)
@@ -80,9 +91,13 @@
         //this seems a little smoother...
         
         if(e.deltaY < 0){
-          camera.position.z++;
+          if(camera.position.z < 100){
+            camera.position.z++;
+          }
         } else {
-          camera.position.z--;
+          if(camera.position.z > 2){
+            camera.position.z--;
+          }
         }
 
       }, true);
