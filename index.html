@@ -50,6 +50,8 @@
       //yeet
       camera.position.x = ((height/4) * tileSize);
       camera.position.y = -((width/4) * tileSize)
+      
+      //scroll wheel to adj j 
       camera.position.z = 40;
       
       renderer.render(scene, camera)
@@ -63,6 +65,15 @@
       }
       animate();
       */
+      window.addEventListener("wheel", function(e) {
+        if(e.deltaY < 0){
+          camera.position.z++;
+        } else {
+          camera.position.z--;
+        }
+        renderer.render(scene, camera)
+        // code to increment object.position.z 
+      }, true);
 		</script>
 
     <!-- include the Glitch button to show what the webpage is about and
