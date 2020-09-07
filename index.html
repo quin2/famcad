@@ -41,7 +41,8 @@
         for(var j = 0; j < height; j++){
           var geometry = new THREE.PlaneGeometry( tileSize, tileSize, 32 );
           
-          //find asset here.... need to cache on personal box to get real benefits.
+          //find asset here.... need to cache on S3 to get real benefits.
+          //three CDN is kind of crappy 
           //address example is https://quin2pm.s3.us-east-2.amazonaws.com/XXX.jpg
           
           var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
