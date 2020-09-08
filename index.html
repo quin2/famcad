@@ -52,20 +52,20 @@
       
       //make some demo text
       var canvas = document.createElement('canvas');
-      canvas.width = 256;
-      canvas.height = 128;
+      canvas.width = 1024;
+      canvas.height = 512;
       var ctx = canvas.getContext("2d");
-      ctx.fillStyle = '#FF';
+      ctx.fillStyle = '#F5f5f5';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#ff00ff';
-      ctx.font = "20px Arial"
-      ctx.fillText("Hello World", 10, 20);
+      ctx.fillStyle = '#000000';
+      ctx.font = "40px Arial"
+      ctx.fillText("Hello World", 10, 35);
       var myText = new THREE.Texture(canvas);
       myText.needsUpdate = true;
       
       for(var i = 0; i < width; i++){
         for(var j = 0; j < height; j++){
-          var geometry = new THREE.BoxBufferGeometry( tileSize, tileSize, 0.1);
+          var geometry = new THREE.BoxBufferGeometry( tileSize, tileSize, 0.001);
           
           //address example is https://quin2pm.s3.us-east-2.amazonaws.com/XXX.jpg
           const loader = new THREE.TextureLoader();
@@ -195,16 +195,12 @@
 </html>
 
 <!--
-get stuff to center actually...
+idea for text in future:
+outline areas where text is going to go, and use text defined in dom to place it inside the boxes after loading
 
-
-TODO:
+todo:
 force mosaic OP images to be power of two (128x128)
 get actual pixel to disappear
-
-in order to add text, we will have to draw to canvas, then apply as mesh surface for each individual.....
-possibly pre-render and display as back mesh texture, then overlay with the 'real element' later? 
-
 get working for touch...
 
 advanced: change LOD as images are zoomed in? 
