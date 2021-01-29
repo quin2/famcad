@@ -1,8 +1,6 @@
-photomosaic
-=================
+build fun stuff with blocks. no, this isn't minecraft
 
-it's magic ;0
-
--------------------
-
-(O v O ") <- "look, a bird!"
+# todo
+* fix webpack run times
+* detect face clicked
+* add box to clicked face
