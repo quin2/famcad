@@ -1,6 +1,6 @@
 ## famcad
 
-build fun stuff with blocks. no, this isn't minecraft
+A simple CAD application designed for smartphones. No, this isn't minecraft. [Should be live here](https://quinnv.space/famcad/index.html)
 
 ## building
 * built with webpack and NPM
