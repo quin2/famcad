@@ -12,7 +12,7 @@ var lightsOn = true
 var lights = []
 
 var scene = new THREE.Scene();
-scene.background = new THREE.Color( 0xf0f0f0 );
+scene.background = new THREE.Color( 0x333333 );
 
 //and god said...
 const light = new THREE.AmbientLight( 0x606060 ); // soft white light
@@ -68,6 +68,9 @@ camera.position.y = centery;
 
 //controls
 var controls = new OrbitControls( camera, renderer.domElement );
+controls.target.set(2, -4, 2);
+  controls.update();  
+
 controls.enableDamping = true; 
 controls.dampingFactor = 0.05;
 controls.screenSpacePanning = false;
@@ -124,11 +127,16 @@ function drawObject(sel){
 }
 
 
-function onMouseClick( event ) {  
+function onMouseClick( event ) { 
   if(mode != tool.ORBIT){
     // update the picking ray with the camera and mouse position
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+    if(event.clientX == null){
+      mouse.x = ( event.touches[0].clientX / window.innerWidth ) * 2 - 1;
+      mouse.y = - ( event.touches[0].clientY / window.innerHeight ) * 2 + 1;
+    }
     
     raycaster.setFromCamera( mouse, camera );
 
@@ -142,7 +150,6 @@ function onMouseClick( event ) {
         drawObject(sel)
       }
       if(mode == tool.DELETE){
-        console.log(sel)
         if(sel.object.type == blocks.LIGHT){
           scene.remove(sel.object.light);
         }
@@ -163,14 +170,20 @@ function onWindowResize(){
 }
 
 function switchToolOrbit(e){
+  clearButtons()
+  document.getElementById("orbit").classList.add("selected")
   mode = tool.ORBIT
 }
 
 function switchToolBlock(e){
+  clearButtons()
+  document.getElementById("block").classList.add("selected")
   mode = tool.BUILD
 }
 
 function switchToolDelete(e){
+  clearButtons()
+  document.getElementById("delete").classList.add("selected")
   mode = tool.DELETE
 }
 
@@ -179,6 +192,8 @@ function todoFunc(e){
 }
 
 function switchToolLight(e){
+  clearButtons()
+  document.getElementById("light").classList.add("selected")
   mode = tool.LIGHT
 }
 
@@ -187,14 +202,24 @@ function toggleLights(e){
     scene.remove(directionalLight)
     lights.forEach(light => scene.add(light))
     scene.background = new THREE.Color( 0x000000 );
+    document.getElementById("render").innerHTML = "🌞";
   }
   else {
     scene.add(directionalLight)
     lights.forEach(light => scene.remove(light))
-    scene.background = new THREE.Color( 0xf0f0f0 );
+    scene.background = new THREE.Color( 0x333333 );
+    document.getElementById("render").innerHTML = "🌚" ;
   }
 
   lightsOn = !lightsOn
+}
+
+function clearButtons(){
+  document.getElementById("orbit").classList.remove("selected")
+  document.getElementById("block").classList.remove("selected")
+  document.getElementById("light").classList.remove("selected")
+  document.getElementById("delete").classList.remove("selected")
+  document.getElementById("orbit").classList.remove("selected")
 }
 
 //credits https://discourse.threejs.org/t/round-edged-box/1402
@@ -227,8 +252,8 @@ function RoundEdgedBox(w, h, d, r, wSegs, hSegs, dSegs, rSegs) {
     bendedPlane(w, d, r, wSegs, dSegs, rSegs, h * .5, 'x', Math.PI * -.5, 4);
     bendedPlane(w, d, r, wSegs, dSegs, rSegs, h * .5, 'x', Math.PI * .5, 5);
 
-    fullGeometry.addAttribute("position", new THREE.BufferAttribute(new Float32Array(fullPosition), 3));
-    fullGeometry.addAttribute("uv", new THREE.BufferAttribute(new Float32Array(fullUvs), 2));
+    fullGeometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(fullPosition), 3));
+    fullGeometry.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(fullUvs), 2));
     fullGeometry.setIndex(fullIndex);
     
     fullGeometry.computeVertexNormals();
@@ -322,6 +347,7 @@ function RoundEdgedBox(w, h, d, r, wSegs, hSegs, dSegs, rSegs) {
   }
 
 window.addEventListener( 'click', onMouseClick, false );
+window.addEventListener( 'touchstart', onMouseClick, false );
 window.addEventListener( 'resize', onWindowResize, false );
 
 document.getElementById('orbit').addEventListener('click', switchToolOrbit)

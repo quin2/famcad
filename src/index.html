@@ -3,23 +3,25 @@
 	<head>
 		<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>mosaicmosaic</title>
+		<title>famCAD</title>
 		<style>
 			body { margin: 0; background-color: #ffffff}
       body, html { height: 100%; overflow: hidden; }
 			canvas { width: 100%; height: 100% }
-			#control { width: 100%; z-index: 999; background: white; position: absolute; bottom:0;}
+			#control { width: 98%; z-index: 999; background: white; position: absolute; display: flex; bottom:0; flex-direction: row; height: 2em; padding-top: 0.5em; padding-bottom: 0.5em; border-radius: 2em; margin-left: 1%; margin-bottom: 1em; margin-right: 1%;}
+			#control div { margin-left: 0.25em; cursor: pointer; font-size: 1.5em; padding-left: 0.5em; padding-right: 0.5em; border-radius: 1em; padding-bottom: 1%;}
+			.selected{background-color: #333333;}
 		</style>
 	</head>
 	<body>
 
 		<div id="control">
-			<button id="orbit">orbit</button>
-			<button id="block">block</button>
-			<button id="light">light</button>
-			<button id="delete">delete</button>
-			<button id="render">lights</button>
-			<button id="fam">fam</button>
+			<div id="orbit" class="selected">👀</div>
+			<div id="block">🔨</div>
+			<div id="light">💡</div>
+			<div id="delete">🚮</div>
+			<div id="render">🌚</div>
+			<div id="fam"></div>
 		</div>
   </body>
 </html>
